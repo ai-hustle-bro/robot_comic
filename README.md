@@ -317,7 +317,7 @@ Write plain-text prompts in `instructions.txt`. To reuse shared prompt pieces, a
 [passion_for_lobster_jokes]
 [identities/witty_identity]
 ```
-Each placeholder pulls the matching file under `src/robot_comic/prompts/` (nested paths allowed). See `profiles/example/` for a reference layout.
+Each placeholder pulls the matching file under `src/robot_comic/prompts/` (nested paths allowed). See `docs/persona_template/example/` for a reference layout.
 
 **Enabling tools:**
 
@@ -334,7 +334,7 @@ Tools are resolved first from Python files in the profile folder (custom tools),
 **Custom tools:**
 
 On top of built-in tools found in the core library, you can implement custom tools specific to your profile by adding Python files in the profile folder.
-Custom tools must subclass `robot_comic.tools.core_tools.Tool` (see `profiles/example/sweep_look.py`).
+Custom tools must subclass `robot_comic.tools.core_tools.Tool` (see `docs/persona_template/example/sweep_look.py`).
 
 **Edit personalities from the UI:**
 
@@ -352,7 +352,7 @@ Note: The "Personality" panel updates the conversation instructions. Tool sets a
 
 To create a locked variant of the app that cannot switch profiles, edit `src/robot_comic/config.py` and set the `LOCKED_PROFILE` constant to the desired profile name:
 ```python
-LOCKED_PROFILE: str | None = "mars_rover"  # Lock to this profile
+LOCKED_PROFILE: str | None = "don_rickles"  # Lock to this profile
 ```
 When `LOCKED_PROFILE` is set, the app always uses that profile, ignoring saved startup settings, `REACHY_MINI_CUSTOM_PROFILE`, and the admin UI personality picker. The UI shows "(locked)" and disables all profile editing controls.
 This is useful for creating dedicated clones of the app with a fixed personality. Clone scripts can simply edit this constant to lock the variant.

@@ -63,27 +63,26 @@ def _git_tracked_files(project_root: Path) -> list[Path]:
 
 def test_profile_name_resolves_directly_to_storage_dir() -> None:
     """Built-in profile names should map directly to their on-disk directory."""
-    profile_dir = resolve_profile_dir("mad_scientist_assistant")
+    profile_dir = resolve_profile_dir("default")
 
-    assert profile_dir.name == "mad_scientist_assistant"
+    assert profile_dir.name == "default"
     assert (profile_dir / "instructions.txt").is_file()
 
 
 def test_prompts_load_from_compact_builtin_profile(monkeypatch: pytest.MonkeyPatch) -> None:
     """Prompt loading should read compact built-in profile instructions directly."""
-    monkeypatch.setattr(config, "REACHY_MINI_CUSTOM_PROFILE", "mad_scientist_assistant")
+    monkeypatch.setattr(config, "REACHY_MINI_CUSTOM_PROFILE", "don_rickles")
     monkeypatch.setattr(config, "PROFILES_DIRECTORY", DEFAULT_PROFILES_DIRECTORY)
     # Disable joke-history injection so the result matches the raw file exactly.
     monkeypatch.setattr(config, "JOKE_HISTORY_ENABLED", False)
+    # Use the gemini_tts output backend so Gemini TTS delivery tags are kept
+    # verbatim (not stripped), making the result match the raw file on disk.
+    monkeypatch.setattr(config, "AUDIO_OUTPUT_BACKEND", "gemini_tts")
 
-    expected = (
-        (DEFAULT_PROFILES_DIRECTORY / "mad_scientist_assistant" / "instructions.txt")
-        .read_text(encoding="utf-8")
-        .strip()
-    )
+    expected = (DEFAULT_PROFILES_DIRECTORY / "don_rickles" / "instructions.txt").read_text(encoding="utf-8").strip()
 
     assert prompts_mod.get_session_instructions() == expected
-    assert read_instructions_for("mad_scientist_assistant") == expected
+    assert read_instructions_for("don_rickles") == expected
 
 
 def test_builtin_default_profile_tools_load_for_ui() -> None:
