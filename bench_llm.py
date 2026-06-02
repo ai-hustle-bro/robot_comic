@@ -5,10 +5,11 @@ Usage:
     python bench_llm.py --turns 20         # 20-turn tool-call sanity check (Task 5)
     python bench_llm.py --temperature 0    # greedy (deterministic, for Task 5 comparison)
 
-Requires llama-server running on localhost:11434.
+Requires llama-server running at LLAMA_CPP_URL, or localhost:8080 by default.
 """
 
 from __future__ import annotations
+import os
 import sys
 import json
 import time
@@ -20,8 +21,8 @@ from typing import Any
 
 # ── constants ─────────────────────────────────────────────────────────────────
 
-BASE_URL = "http://localhost:11434"
-MODEL_ID = "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+BASE_URL = os.getenv("LLAMA_CPP_URL", "http://localhost:8080")
+MODEL_ID = "Qwen3-14B-UD-Q4_K_XL.gguf"
 
 # Don Rickles system prompt (full instructions.txt)
 SYSTEM_PROMPT = """\
