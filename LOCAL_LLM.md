@@ -8,7 +8,7 @@
 
 ## Current State
 
-- **Active model:** `Qwen3-14B-UD-Q4_K_XL.gguf` via llama-server on port 11434
+- **Active model:** `Qwen3-14B-UD-Q4_K_XL.gguf` via llama-server on port 8080
 - **Previous model:** Hermes3 8B (Ollama) — broke on system prompts > 2500 tokens
 - **Scrapped:** Qwen3 35B-A3B MoE — CPU MoE offload bottlenecked prefill at 86 tok/s,
   decode at 17 tok/s; MTP PR #22673 crashes after first request (checkpoint size mismatch)
@@ -141,11 +141,12 @@ $env:CUDA_VISIBLE_DEVICES = "0"  # Single GPU, explicit
     -ub 2048 `
     --jinja `
     --host 0.0.0.0 `
-    --port 11434 `
+    --port 8080 `
     >> "C:\Logs\llama-server.log" 2>&1
 ```
 
-Note: Using port 11434 to maintain backward compatibility with existing Pi `.env` files.
+Note: Using port 8080 to match the current `LLAMA_CPP_DEFAULT_URL` in `config.py`
+and the health-check / laptop-mode tests.
 llama-server's `/v1/chat/completions` is OpenAI-compatible.
 
 ---
@@ -155,11 +156,11 @@ llama-server's `/v1/chat/completions` is OpenAI-compatible.
 ### 1. `config.py` — Add `LLAMA_CPP_URL`
 
 The current `_ollama_base_url` property in `chatterbox_tts.py` derives the LLM URL
-from `CHATTERBOX_URL` by swapping the port to 11434 — fragile. Add a dedicated var:
+from `CHATTERBOX_URL` by swapping to a fixed port — fragile. Add a dedicated var:
 
 ```python
 LLAMA_CPP_URL_ENV = "LLAMA_CPP_URL"
-LLAMA_CPP_DEFAULT_URL = "http://astralplane.lan:11434"
+LLAMA_CPP_DEFAULT_URL = "http://astralplane.lan:8080"
 # in Config class:
 LLAMA_CPP_URL = os.getenv(LLAMA_CPP_URL_ENV, LLAMA_CPP_DEFAULT_URL)
 # also add to LOCAL_STT_RESPONSE_BACKEND_CHOICES:
@@ -249,7 +250,7 @@ Run with representative Don Rickles system prompt (full, no trimming):
 - [x] Update `_ollama_base_url` property → `_llama_cpp_url` reading new config var — see `chatterbox_tts.py:205`.
 - [x] Remove Hermes3 workarounds — `_trim_tool_spec`, `_coerce_text_tool_call`, `_nudge_llm`, `_TEXT_TOOL_CALL_RE`, `_parse_text_tool_args`, `_parse_json_content_tool_call` all gone from the tree (grep returns no hits).
 - [x] Run existing test suite: `pytest tests/ -v`.
-- [x] Update Pi `.env`: `LLAMA_CPP_URL=http://astralplane.lan:11434`.
+- [x] Update Pi `.env`: `LLAMA_CPP_URL=http://astralplane.lan:8080`.
 
 ### Task 7: Update OLLAMA_MODEL references ✅
 

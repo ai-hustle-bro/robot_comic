@@ -65,7 +65,7 @@ result as `self._voice_clone_ref_path`.  On every `/tts` request:
 **Critical lesson — Ollama GUI vs. direct serve:**
 The Ollama tray/GUI app (`ollama app.exe`) is a wrapper that partially exposes the Ollama API over LAN. It works for simple GET requests (`/api/tags`) but blocks `/api/chat`, `/v1/chat/completions`, and appears to silently drop or mishandle POST requests with large bodies (e.g. our full Rickles system prompt in the `system` field of `/api/generate`). **Never start Ollama by clicking the tray icon.** Always use the desktop shortcut → `Start-RobotServices.ps1`, which runs `ollama.exe serve` directly with `OLLAMA_HOST=0.0.0.0`.
 
-> **Status 2026-05-19:** Ollama has been replaced by llama-server (see `LOCAL_LLM.md`). The cautionary tale above is preserved for historical reference but no longer applies — the active LLM endpoint is `llama-server`'s `/v1/chat/completions` on port 11434.
+> **Status 2026-05-19:** Ollama has been replaced by llama-server (see `LOCAL_LLM.md`). The cautionary tale above is preserved for historical reference but no longer applies — the active LLM endpoint is `llama-server`'s `/v1/chat/completions` on port 8080.
 
 **Current state at end of Session 2:**
 - Code is on main and correct
@@ -260,7 +260,7 @@ Leaves ~1.5 GB headroom. Both processes can be co-resident.
 
 - [ ] On router: assign static DHCP lease for the laptop's MAC
 - [ ] On Pi: add to `/etc/hosts`: `<laptop-ip>  astralplane.lan`
-- [ ] On Pi: verify Ollama reachable: `curl http://astralplane.lan:11434/api/tags`
+- [ ] On Pi: verify llama-server reachable: `curl http://astralplane.lan:8080/health`
 - [ ] On Pi: verify Chatterbox reachable: `curl http://astralplane.lan:8004/health`
 
 ### Task 8: Enable Wake-on-LAN ⏳ Deferred

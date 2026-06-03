@@ -292,7 +292,7 @@ reachable.
 
 If Gemini Live quota is tripped (free tier ≈ 10 req/day per
 `CLAUDE.md`), switch the admin UI to `(moonshine, llama, gemini_tts)`.
-Requires `llama-server` on `astralplane.lan:11434` (Wake-on-LAN supported
+Requires `llama-server` on `astralplane.lan:8080` (Wake-on-LAN supported
 via #203 if it's asleep). Re-run steps 8–13.
 
 ---
